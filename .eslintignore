@@ -1,0 +1,4 @@
+./apps/backend/src/app/types/graphql.ts
+./apps/backend/src/app/schema.gql
+./libs/gql/src/lib/generated/generated.tsx
+./libs/gql/src/lib/generated/schema.json

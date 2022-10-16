@@ -1,0 +1,28 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+"""
+Date scalar type, represented as an ISO timestamp over the network. Is parsed to a luxon DateTime object.
+"""
+scalar DateTime
+
+type Mutation {
+  createScore(score: ScoreInput!): ScoreEntity!
+}
+
+type Query {
+  allScores: [ScoreEntity!]!
+}
+
+type ScoreEntity {
+  date: DateTime!
+  id: ID!
+  name: String!
+  score: Float!
+}
+
+input ScoreInput {
+  name: String!
+  score: Int!
+}

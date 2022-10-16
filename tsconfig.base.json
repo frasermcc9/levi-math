@@ -1,0 +1,35 @@
+{
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "compilerOptions": {
+      "target": "es6",
+      "module": "commonjs",
+      "esModuleInterop": true
+    }
+  },
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@levi-math/common": ["libs/common/src/index.ts"],
+      "@levi-math/components": ["libs/components/src/index.ts"],
+      "@levi-math/gql": ["libs/gql/src/index.ts"]
+    },
+    "strictNullChecks": true,
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "tmp"]
+}

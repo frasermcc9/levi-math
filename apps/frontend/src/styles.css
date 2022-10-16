@@ -1,0 +1,62 @@
+@tailwind components;
+@tailwind base;
+@tailwind utilities;
+
+#root {
+  @apply font-['Poppins'];
+}
+
+body {
+  @apply bg-gray-50;
+}
+
+@keyframes zoomIn {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.zoomIn {
+  animation: zoomIn 0.1s ease-in both;
+}
+
+@keyframes zoomOut {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+}
+
+.zoomOut {
+  animation: zoomOut 0.1s ease-out both;
+}
+
+.Toastify__toast--error {
+  border-radius: 5px !important;
+  background: #e04b50 !important;
+}
+
+.Toastify__toast--success {
+  border-radius: 5px !important;
+  background: #4da755 !important;
+}
+
+.Toastify__toast--warning {
+  border-radius: 5px !important;
+  background: #e2d627 !important;
+}
+
+.Toastify__toast-body {
+  font-size: 16px;
+  width: 100%;
+  font-weight: 400;
+}

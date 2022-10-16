@@ -1,0 +1,17 @@
+query GetScores {
+  allScores {
+    id
+    date
+    name
+    score
+  }
+}
+
+mutation PostScore($score: Int!, $name: String!) {
+  createScore(score: { name: $name, score: $score }) {
+    date
+    id
+    name
+    score
+  }
+}
