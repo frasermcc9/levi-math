@@ -1,5 +1,6 @@
 import { GameConfig, isEligible, Maths } from '@levi-math/common';
 import { usePostScoreMutation } from '@levi-math/gql';
+import { DateTime } from 'luxon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
@@ -10,17 +11,29 @@ export interface GameScreenProps {
 }
 
 export const GameScreen = ({ config }: GameScreenProps) => {
-  const [score, setScore] = useState(0);
-  const [time, setTime] = useState(config.duration);
-  const [posted, setPosted] = useState(false);
-
   const navigate = useNavigate();
 
+  const [posted, setPosted] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const [time, setTime] = useState(config.duration);
+  const [endTime, setEndTime] = useState<DateTime>(
+    DateTime.now().plus({ seconds: config.duration })
+  );
+
+  const [inputValue, setInputValue] = useState('');
   const [{ lhs, op, rhs, solution }, setQuestion] = useState(
     Maths.nextQuestion(config)
   );
 
-  const [inputValue, setInputValue] = useState('');
+  const resetGame = useCallback(() => {
+    setTime(config.duration);
+    setEndTime(DateTime.now().plus({ seconds: config.duration }));
+    setScore(0);
+    setInputValue('');
+    setPosted(false);
+    setQuestion(Maths.nextQuestion(config));
+  }, [config]);
 
   const onInput = useCallback(
     (newValue: string) => {
@@ -50,16 +63,19 @@ export const GameScreen = ({ config }: GameScreenProps) => {
   }, []);
 
   useEffect(() => {
+    let secondsLeft = endTime.diffNow().as('seconds');
+
     const interval = setInterval(() => {
-      setTime((time) => time - 1);
+      secondsLeft = endTime.diffNow().as('seconds');
+      setTime(secondsLeft);
+
+      if (secondsLeft <= 0) {
+        clearInterval(interval);
+      }
     }, 1000);
 
-    if (time <= 0) {
-      clearInterval(interval);
-    }
-
     return () => clearInterval(interval);
-  }, [time]);
+  }, [endTime]);
 
   const [execPostScore] = usePostScoreMutation();
 
@@ -82,7 +98,7 @@ export const GameScreen = ({ config }: GameScreenProps) => {
   return (
     <main className="w-full">
       <div className="flex w-full justify-between p-6">
-        <div>Seconds left: {time}</div>
+        <div>Seconds left: {Math.round(time)}</div>
         <div>Score: {score}</div>
       </div>
       <div className="flex w-full">
@@ -124,10 +140,7 @@ export const GameScreen = ({ config }: GameScreenProps) => {
                 <div className="mt-4 flex items-center justify-center gap-x-8">
                   <button
                     className="rounded p-1 px-2 text-sky-500 transition-colors hover:bg-gray-100"
-                    onClick={() => {
-                      setScore(0);
-                      setTime(config.duration);
-                    }}
+                    onClick={resetGame}
                   >
                     Play Again
                   </button>

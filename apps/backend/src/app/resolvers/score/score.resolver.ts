@@ -16,4 +16,9 @@ export class ScoreResolver {
   createScore(@Args('score') score: ScoreInput) {
     return this.scoreService.createScore(score);
   }
+
+  @Mutation(() => Boolean)
+  async deleteScore(@Args('number') number: number) {
+    await this.scoreService.deleteScore(number);
+  }
 }

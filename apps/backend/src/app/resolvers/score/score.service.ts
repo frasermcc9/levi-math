@@ -29,4 +29,8 @@ export class ScoreService {
       date: DateTime.fromJSDate(score.date),
     }));
   }
+
+  deleteScore(number: number) {
+    return this.scoreModel.deleteMany({ score: number });
+  }
 }
