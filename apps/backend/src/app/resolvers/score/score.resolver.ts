@@ -23,8 +23,9 @@ export class ScoreResolver {
   }
 
   @Mutation(() => ScoreEntity)
-  createScore(@Args('score') score: ScoreInput) {
-    return this.scoreService.createScore(score);
+  createScore(@Args('score') { name, score }: ScoreInput) {
+    const newScore = { score, name: name.trim() };
+    return this.scoreService.createScore(newScore);
   }
 
   @Mutation(() => Boolean)
