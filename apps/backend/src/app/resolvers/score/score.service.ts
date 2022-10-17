@@ -36,29 +36,25 @@ export class ScoreService {
   }
 
   async getTopScoresUniqueUser(count: number): Promise<ScoreEntity[]> {
-    const scores = await this.scoreModel.aggregate([
-      {
-        $group: {
-          _id: '$name',
-          group: { $first: '$$ROOT' },
-        },
-      },
-      {
-        $replaceRoot: {
-          newRoot: '$group',
-        },
-      },
-      {
-        $sort: {
-          score: -1,
-        },
-      },
-      {
-        $limit: count,
-      },
-    ]);
+    const scores = await this.scoreModel
+      .find({}, {}, { sort: { score: -1 } })
+      .exec();
 
-    return scores.map(this.toEntity);
+    const includedNames = new Set<string>();
+    const accumulator = new Array<ScoreDocument>();
+
+    for (let i = 0; i < scores.length; i++) {
+      const score = scores[i];
+      if (!includedNames.has(score.name)) {
+        includedNames.add(score.name);
+        accumulator.push(score);
+      }
+      if (accumulator.length >= count) {
+        break;
+      }
+    }
+
+    return accumulator.map(this.toEntity);
   }
 
   async topScoresPastWeekUniqueUser(count: number): Promise<ScoreEntity[]> {
