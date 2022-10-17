@@ -41,6 +41,7 @@ export class ScoreService {
       { $group: { _id: '$name', group: { $first: '$$ROOT' } } },
       { $replaceRoot: { newRoot: '$group' } },
       { $limit: count },
+      { $sort: { score: -1 } },
     ]);
 
     return scores.map(this.toEntity);
