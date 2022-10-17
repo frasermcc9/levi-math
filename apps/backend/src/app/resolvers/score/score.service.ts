@@ -37,11 +37,25 @@ export class ScoreService {
 
   async getTopScoresUniqueUser(count: number): Promise<ScoreEntity[]> {
     const scores = await this.scoreModel.aggregate([
-      { $sort: { score: -1 } },
-      { $group: { _id: '$name', group: { $first: '$$ROOT' } } },
-      { $replaceRoot: { newRoot: '$group' } },
-      { $limit: count },
-      { $sort: { score: -1 } },
+      {
+        $group: {
+          _id: '$name',
+          group: { $first: '$$ROOT' },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: '$group',
+        },
+      },
+      {
+        $sort: {
+          score: -1,
+        },
+      },
+      {
+        $limit: count,
+      },
     ]);
 
     return scores.map(this.toEntity);
