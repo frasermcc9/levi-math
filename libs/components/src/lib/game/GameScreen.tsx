@@ -113,6 +113,7 @@ export const GameScreen = ({ config }: GameScreenProps) => {
                   className="mb-1 w-32 rounded px-2 text-4xl"
                   value={inputValue}
                   onChange={(e) => onInput(e.target.value)}
+                  ref={(input) => input?.focus()}
                 />
               </>
             ) : (

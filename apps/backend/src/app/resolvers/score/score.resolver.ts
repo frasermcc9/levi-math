@@ -12,6 +12,16 @@ export class ScoreResolver {
     return this.scoreService.getTopScores(10);
   }
 
+  @Query(() => [ScoreEntity])
+  async allScoresUniqueUser(): Promise<ScoreEntity[]> {
+    return this.scoreService.getTopScoresUniqueUser(10);
+  }
+
+  @Query(() => [ScoreEntity])
+  async allScoresPastWeek(): Promise<ScoreEntity[]> {
+    return this.scoreService.getTopScoresPastWeek(10);
+  }
+
   @Mutation(() => ScoreEntity)
   createScore(@Args('score') score: ScoreInput) {
     return this.scoreService.createScore(score);

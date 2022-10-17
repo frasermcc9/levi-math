@@ -7,6 +7,24 @@ query GetScores {
   }
 }
 
+query GetUniqueScores {
+  allScoresUniqueUser {
+    id
+    date
+    name
+    score
+  }
+}
+
+query GetScoresPastWeek {
+  allScoresPastWeek {
+    id
+    date
+    name
+    score
+  }
+}
+
 mutation PostScore($score: Int!, $name: String!) {
   createScore(score: { name: $name, score: $score }) {
     date

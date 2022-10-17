@@ -15,10 +15,13 @@ export interface ScoreInput {
 
 export interface IMutation {
     createScore(score: ScoreInput): ScoreEntity | Promise<ScoreEntity>;
+    deleteScore(number: number): boolean | Promise<boolean>;
 }
 
 export interface IQuery {
     allScores(): ScoreEntity[] | Promise<ScoreEntity[]>;
+    allScoresPastWeek(): ScoreEntity[] | Promise<ScoreEntity[]>;
+    allScoresUniqueUser(): ScoreEntity[] | Promise<ScoreEntity[]>;
 }
 
 export interface ScoreEntity {

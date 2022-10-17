@@ -14,13 +14,14 @@ export const GameOptions = ({ onClick }: GameOptionsProps) => {
   const [subtractionSwitch, subtractionChecked] = useSwitch(true);
   const [additionNumberInputs, additionValues] = useMultiNumberInput(
     4,
-    [2, 100, 2, 100]
+    [2, 100, 2, 100],
+    'bg-gray-200 w-12 rounded'
   );
 
   const [multiplicationSwitch, multiplicationChecked] = useSwitch(true);
   const [divisionSwitch, divisionChecked] = useSwitch(true);
   const [multiplicationNumberInputs, multiplicationValues] =
-    useMultiNumberInput(4, [2, 12, 2, 100]);
+    useMultiNumberInput(4, [2, 12, 2, 100], 'bg-gray-200 w-12 rounded');
 
   const [durationSelector, durationValue] = useSelector(
     [30, 60, 120, 300, 600],
@@ -56,25 +57,22 @@ export const GameOptions = ({ onClick }: GameOptionsProps) => {
   const isEligibleForLeaderboard = useMemo(() => isEligible(config), [config]);
 
   return (
-    <>
+    <div className="flex flex-col gap-y-4">
       <OptionRow
-        switchElement={additionSwitch}
-        numberInputs={additionNumberInputs}
-        text={'Addition'}
+        modeOneSwitch={additionSwitch}
+        modeOneInputs={additionNumberInputs}
+        modeOneText="Addition"
+        modeTwoSwitch={subtractionSwitch}
+        modeTwoText="Subtraction"
       />
-      <div className="flex flex-row items-center gap-x-2">
-        <div className="mt-1.5">{subtractionSwitch}</div>
-        <div className="text-lg">Subtraction</div>
-      </div>
       <OptionRow
-        switchElement={multiplicationSwitch}
-        numberInputs={multiplicationNumberInputs}
-        text={'Multiplication'}
+        modeOneSwitch={multiplicationSwitch}
+        modeOneInputs={multiplicationNumberInputs}
+        modeOneText="Multiplication"
+        modeTwoSwitch={divisionSwitch}
+        modeTwoText="Division"
       />
-      <div className="flex flex-row items-center gap-x-2">
-        <div className="mt-1.5">{divisionSwitch}</div>
-        <div className="text-lg">Division</div>
-      </div>
+
       <div>
         <div>Duration:</div>
         {durationSelector}
@@ -96,6 +94,6 @@ export const GameOptions = ({ onClick }: GameOptionsProps) => {
           </span>
         )}
       </div>
-    </>
+    </div>
   );
 };

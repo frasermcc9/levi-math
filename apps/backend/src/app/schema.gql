@@ -9,10 +9,13 @@ scalar DateTime
 
 type Mutation {
   createScore(score: ScoreInput!): ScoreEntity!
+  deleteScore(number: Float!): Boolean!
 }
 
 type Query {
   allScores: [ScoreEntity!]!
+  allScoresPastWeek: [ScoreEntity!]!
+  allScoresUniqueUser: [ScoreEntity!]!
 }
 
 type ScoreEntity {

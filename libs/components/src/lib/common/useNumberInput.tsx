@@ -1,4 +1,5 @@
 import { Tuple } from '@levi-math/common';
+import classNames from 'classnames';
 import { useCallback, useState } from 'react';
 
 export const useNumberInput = (defaultValue = 0) => {
@@ -14,7 +15,8 @@ export const useMultiNumberInput = <TLength extends number>(
   defaultValue = Array.from({ length: quantity }, () => 0) as Tuple<
     number,
     TLength
-  >
+  >,
+  className?: string
 ) => {
   const [values, setValue] = useState<Tuple<number, TLength>>(defaultValue);
 
@@ -32,6 +34,7 @@ export const useMultiNumberInput = <TLength extends number>(
       key={idx}
       value={values[idx]}
       onChange={(next) => updateIndex(idx, next)}
+      className={className}
     />
   ));
 
@@ -41,12 +44,17 @@ export const useMultiNumberInput = <TLength extends number>(
 export interface NumberInputProps {
   value: number;
   onChange: (value: number) => void;
+  className?: string;
 }
 
-export const NumberInput = ({ value, onChange }: NumberInputProps) => {
+export const NumberInput = ({
+  value,
+  onChange,
+  className,
+}: NumberInputProps) => {
   return (
     <input
-      className="w-12 rounded p-0.5"
+      className={classNames(className)}
       value={value}
       onChange={(e) => onChange(+e.target.value)}
       type="number"

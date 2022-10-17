@@ -1,5 +1,5 @@
 import { GameConfig } from '@levi-math/common';
-import { GameScreen } from '@levi-math/components';
+import { GameScreen, Header } from '@levi-math/components';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,6 +25,7 @@ export const Game = () => {
 
   return (
     <main className="w-full">
+      <Header />
       <GameScreen config={config} />
     </main>
   );
