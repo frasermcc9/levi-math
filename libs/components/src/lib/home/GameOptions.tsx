@@ -15,13 +15,13 @@ export const GameOptions = ({ onClick }: GameOptionsProps) => {
   const [additionNumberInputs, additionValues] = useMultiNumberInput(
     4,
     [2, 100, 2, 100],
-    'bg-gray-200 w-12 rounded'
+    'bg-gray-200 w-12 rounded pl-1'
   );
 
   const [multiplicationSwitch, multiplicationChecked] = useSwitch(true);
   const [divisionSwitch, divisionChecked] = useSwitch(true);
   const [multiplicationNumberInputs, multiplicationValues] =
-    useMultiNumberInput(4, [2, 12, 2, 100], 'bg-gray-200 w-12 rounded');
+    useMultiNumberInput(4, [2, 12, 2, 100], 'bg-gray-200 w-12 rounded pl-1');
 
   const [durationSelector, durationValue] = useSelector(
     [30, 60, 120, 300, 600],
@@ -83,7 +83,7 @@ export const GameOptions = ({ onClick }: GameOptionsProps) => {
       >
         Start
       </button>
-      <div className="flex items-center gap-x-4">
+      <div className="flex items-center gap-x-4 text-lg font-bold">
         {isEligibleForLeaderboard ? (
           <span className="text-green-500">
             This run is eligible for the leaderboard!

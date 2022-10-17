@@ -14,7 +14,7 @@ export const Home = () => {
     <main className="w-full">
       <Header />
       <div className="flex justify-center">
-        <div className="max-w-lg rounded-lg bg-gray-200 p-10">
+        <div className="max-w-lg rounded-2xl bg-gray-200 p-10">
           <div className="flex flex-col gap-y-8">
             <IntroHeader />
 
