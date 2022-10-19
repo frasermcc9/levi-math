@@ -20,6 +20,7 @@ export interface IMutation {
 
 export interface IQuery {
     allScores(): ScoreEntity[] | Promise<ScoreEntity[]>;
+    allScoresPastDay(): ScoreEntity[] | Promise<ScoreEntity[]>;
     allScoresPastWeek(): ScoreEntity[] | Promise<ScoreEntity[]>;
     allScoresUniqueUser(): ScoreEntity[] | Promise<ScoreEntity[]>;
 }

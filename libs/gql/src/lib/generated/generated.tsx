@@ -36,6 +36,7 @@ export type MutationDeleteScoreArgs = {
 export type Query = {
   __typename?: 'Query';
   allScores: Array<ScoreEntity>;
+  allScoresPastDay: Array<ScoreEntity>;
   allScoresPastWeek: Array<ScoreEntity>;
   allScoresUniqueUser: Array<ScoreEntity>;
 };
@@ -67,6 +68,11 @@ export type GetScoresPastWeekQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetScoresPastWeekQuery = { __typename?: 'Query', allScoresPastWeek: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
+
+export type GetScoresPastDayQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetScoresPastDayQuery = { __typename?: 'Query', allScoresPastDay: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
 
 export type PostScoreMutationVariables = Exact<{
   score: Scalars['Int'];
@@ -188,6 +194,43 @@ export function useGetScoresPastWeekLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type GetScoresPastWeekQueryHookResult = ReturnType<typeof useGetScoresPastWeekQuery>;
 export type GetScoresPastWeekLazyQueryHookResult = ReturnType<typeof useGetScoresPastWeekLazyQuery>;
 export type GetScoresPastWeekQueryResult = Apollo.QueryResult<GetScoresPastWeekQuery, GetScoresPastWeekQueryVariables>;
+export const GetScoresPastDayDocument = gql`
+    query GetScoresPastDay {
+  allScoresPastDay {
+    id
+    date
+    name
+    score
+  }
+}
+    `;
+
+/**
+ * __useGetScoresPastDayQuery__
+ *
+ * To run a query within a React component, call `useGetScoresPastDayQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetScoresPastDayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetScoresPastDayQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetScoresPastDayQuery(baseOptions?: Apollo.QueryHookOptions<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>(GetScoresPastDayDocument, options);
+      }
+export function useGetScoresPastDayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>(GetScoresPastDayDocument, options);
+        }
+export type GetScoresPastDayQueryHookResult = ReturnType<typeof useGetScoresPastDayQuery>;
+export type GetScoresPastDayLazyQueryHookResult = ReturnType<typeof useGetScoresPastDayLazyQuery>;
+export type GetScoresPastDayQueryResult = Apollo.QueryResult<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>;
 export const PostScoreDocument = gql`
     mutation PostScore($score: Int!, $name: String!) {
   createScore(score: {name: $name, score: $score}) {

@@ -1,8 +1,8 @@
 import { Tab } from '@headlessui/react';
 import {
+  useGetScoresPastDayQuery,
   useGetScoresQuery,
   useGetUniqueScoresQuery,
-  useGetScoresPastWeekQuery,
 } from '@levi-math/gql';
 import classNames from 'classnames';
 import { useMemo } from 'react';
@@ -16,7 +16,7 @@ export const LeaderboardTabs = () => {
     fetchPolicy: 'cache-and-network',
   });
 
-  const { data: weeklyScoreData } = useGetScoresPastWeekQuery({
+  const { data: dailyScoreData } = useGetScoresPastDayQuery({
     fetchPolicy: 'cache-and-network',
   });
 
@@ -33,12 +33,12 @@ export const LeaderboardTabs = () => {
     () => ({
       'Best Ever': allScoresData?.allScores,
       'Best Players': uniqueScoresData?.allScoresUniqueUser,
-      'Best Weekly': weeklyScoreData?.allScoresPastWeek,
+      'Best Daily': dailyScoreData?.allScoresPastDay,
     }),
     [
       allScoresData?.allScores,
       uniqueScoresData?.allScoresUniqueUser,
-      weeklyScoreData?.allScoresPastWeek,
+      dailyScoreData?.allScoresPastDay,
     ]
   );
 
