@@ -7,7 +7,7 @@ export class DailyScore {
   date: Date;
 
   @Prop({ required: false, type: Number })
-  ms?: number;
+  ms?: number | null;
 
   @Prop({ required: true, type: String })
   userFirebaseId: string;

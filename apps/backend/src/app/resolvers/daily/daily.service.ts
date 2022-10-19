@@ -9,6 +9,21 @@ import {
 import { RandomService } from '../../services/random.service';
 import { ResolvableDailyScore } from './schema/daily-score.entity';
 
+/**
+ * Daily service
+ *
+ * When the user starts a daily, a new daily score is created, without the score
+ * (ms). The key returned to the user is the ID of this document. If the user
+ * attempts to start a daily again (outside of a grace period of 10 seconds),
+ * the score is set to null and can no longer be submitted.
+ *
+ * When the user submits a score, the score is set to the time it took to
+ * complete the daily IF the ms in the document is undefined. If the ms is
+ * already set or is null, the score is not updated.
+ *
+ * Currently the duration is set by the client, because I trust my friends,
+ * but I'll probably change this to a server-side check soon.
+ */
 @Injectable()
 export class DailyService {
   constructor(
@@ -23,6 +38,13 @@ export class DailyService {
     const alreadyStarted = await this.getScore(userFirebaseId, dateTime);
 
     if (alreadyStarted) {
+      // grace period of 10 seconds to call again
+      const diff = Math.abs(
+        dateTime.diff(DateTime.fromJSDate(alreadyStarted.date)).as('seconds')
+      );
+      if (alreadyStarted.ms === undefined && diff > 10) {
+        await alreadyStarted.updateOne({ ms: null });
+      }
       return null;
     }
 
@@ -33,25 +55,21 @@ export class DailyService {
   }
 
   async postDaily(userFirebaseId: string, key: string, ms: number) {
-    const partialScore = await this.dailyScoreModel.findById(key);
+    const currentScoreDoc = await this.dailyScoreModel.findById(key);
 
-    if (!partialScore) {
+    if (!currentScoreDoc) {
       return false;
     }
 
-    if (partialScore.userFirebaseId !== userFirebaseId) {
+    if (currentScoreDoc.userFirebaseId !== userFirebaseId) {
       return false;
     }
 
-    const createdTime = DateTime.fromJSDate(partialScore.date);
-
-    // if the score was created more than 120 seconds ago then its probably
-    // cheated
-    if (createdTime.diffNow().as('seconds') > 120) {
+    if (currentScoreDoc.ms === null) {
       return false;
     }
 
-    await partialScore.updateOne({ ms });
+    await currentScoreDoc.updateOne({ ms });
 
     return true;
   }
