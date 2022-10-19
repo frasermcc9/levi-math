@@ -1,7 +1,13 @@
 import { GameConfig } from './game-config';
 import { default as MathEval } from 'math-expression-evaluator';
 
-const nextQuestion = (cfg: GameConfig) => {
+interface GeneratorOptions {
+  useRandom?: () => number;
+}
+
+const nextQuestion = (cfg: GameConfig, options?: GeneratorOptions) => {
+  const nextRandom = options?.useRandom ?? Math.random;
+
   const {
     addition,
     additionShape,
@@ -19,13 +25,13 @@ const nextQuestion = (cfg: GameConfig) => {
   ];
 
   const selectedOperation =
-    operations[Math.floor(Math.random() * operations.length)];
+    operations[Math.floor(nextRandom() * operations.length)];
 
   if (selectedOperation === '*' || selectedOperation === '/') {
     const [lhsLow, lhsHigh, rhsLow, rhsHigh] = multiplicationShape;
 
-    const lhs = Math.floor(Math.random() * (lhsHigh - lhsLow + 1)) + lhsLow;
-    const rhs = Math.floor(Math.random() * (rhsHigh - rhsLow + 1)) + rhsLow;
+    const lhs = Math.floor(nextRandom() * (lhsHigh - lhsLow + 1)) + lhsLow;
+    const rhs = Math.floor(nextRandom() * (rhsHigh - rhsLow + 1)) + rhsLow;
     if (selectedOperation === '*') {
       const solution = MathEval.eval(`${lhs} ${selectedOperation} ${rhs}`);
 
@@ -36,7 +42,7 @@ const nextQuestion = (cfg: GameConfig) => {
         solution,
       };
     } else {
-      const product = MathEval.eval(`${lhs} * ${rhs}`);
+      const product = lhs * rhs;
       return {
         lhs: product,
         rhs: lhs,
@@ -49,8 +55,8 @@ const nextQuestion = (cfg: GameConfig) => {
   if (selectedOperation === '+' || selectedOperation === '-') {
     const [lhsLow, lhsHigh, rhsLow, rhsHigh] = additionShape;
 
-    const lhs = Math.floor(Math.random() * (lhsHigh - lhsLow + 1)) + lhsLow;
-    const rhs = Math.floor(Math.random() * (rhsHigh - rhsLow + 1)) + rhsLow;
+    const lhs = Math.floor(nextRandom() * (lhsHigh - lhsLow + 1)) + lhsLow;
+    const rhs = Math.floor(nextRandom() * (rhsHigh - rhsLow + 1)) + rhsLow;
 
     if (selectedOperation === '+') {
       const solution = MathEval.eval(`${lhs} ${selectedOperation} ${rhs}`);
@@ -62,7 +68,7 @@ const nextQuestion = (cfg: GameConfig) => {
         solution,
       };
     } else {
-      const sum = MathEval.eval(`${lhs} + ${rhs}`);
+      const sum = lhs + rhs;
       return {
         lhs: sum,
         rhs: lhs,
@@ -75,6 +81,11 @@ const nextQuestion = (cfg: GameConfig) => {
   throw new Error('Invalid operation');
 };
 
+const solve = (lhs: number, op: string, rhs: number) => {
+  return MathEval.eval(`${lhs} ${op} ${rhs}`);
+};
+
 export const Maths = {
   nextQuestion,
+  solve,
 };

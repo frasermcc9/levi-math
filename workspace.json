@@ -5,6 +5,7 @@
     "backend": "apps/backend",
     "common": "libs/common",
     "components": "libs/components",
+    "firebase": "libs/firebase",
     "frontend": "apps/frontend",
     "gql": "libs/gql"
   }

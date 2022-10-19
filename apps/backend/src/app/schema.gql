@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type DailyScoreEntity {
+  date: DateTime!
+  id: ID!
+  ms: Float
+  user: UserEntity!
+  userFirebaseId: String!
+}
+
 """
 Date scalar type, represented as an ISO timestamp over the network. Is parsed to a luxon DateTime object.
 """
@@ -10,6 +18,8 @@ scalar DateTime
 type Mutation {
   createScore(score: ScoreInput!): ScoreEntity!
   deleteScore(number: Float!): Boolean!
+  startDaily: String
+  submitDaily(key: String!, milliseconds: Int!): Boolean!
 }
 
 type Query {
@@ -17,6 +27,14 @@ type Query {
   allScoresPastDay: [ScoreEntity!]!
   allScoresPastWeek: [ScoreEntity!]!
   allScoresUniqueUser: [ScoreEntity!]!
+  getDailyQuestions: [QuestionEntity!]!
+  getDailyScores: [DailyScoreEntity!]!
+}
+
+type QuestionEntity {
+  lhs: Float!
+  operator: String!
+  rhs: Float!
 }
 
 type ScoreEntity {
@@ -29,4 +47,10 @@ type ScoreEntity {
 input ScoreInput {
   name: String!
   score: Int!
+}
+
+type UserEntity {
+  dailyScore: DailyScoreEntity
+  firebaseId: ID!
+  username: String!
 }

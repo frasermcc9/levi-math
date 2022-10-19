@@ -1,11 +1,14 @@
 import { StrictMode } from 'react';
 import * as ReactDOM from 'react-dom/client';
+
 import { BrowserRouter } from 'react-router-dom';
+import { Router } from './app/Router';
 
 import { ApolloProvider } from '@apollo/client';
-
-import { Router } from './app/Router';
 import { gqlClient } from './app/services/apollo';
+
+import './app/services/firebase';
+import { AuthProvider } from '@levi-math/components';
 
 import { ToastContainer, cssTransition } from 'react-toastify';
 import './styles.css';
@@ -38,9 +41,11 @@ root.render(
       hideProgressBar={true}
     />
     <ApolloProvider client={gqlClient}>
-      <BrowserRouter>
-        <Router />
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Router />
+        </BrowserRouter>
+      </AuthProvider>
     </ApolloProvider>
   </StrictMode>
 );

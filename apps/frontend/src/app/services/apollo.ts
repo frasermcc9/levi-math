@@ -1,7 +1,9 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { GQLSchemaIntrospectionJson } from '@levi-math/gql';
 import { withScalars } from 'apollo-link-scalars';
+import { getAuth } from 'firebase/auth';
 import { buildClientSchema, IntrospectionQuery } from 'graphql';
 import { DateTime } from 'luxon';
 
@@ -17,6 +19,23 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
   if (networkError) {
     console.error(`[Network error]: ${networkError}`);
   }
+});
+
+const authLink = setContext(async (_, { headers }) => {
+  const token = await getAuth().currentUser?.getIdToken();
+
+  if (token) {
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    };
+  }
+
+  return {
+    headers,
+  };
 });
 
 const httpLink = new HttpLink({
@@ -43,7 +62,7 @@ const scalarsLink = withScalars({
 });
 
 const gqlClient = new ApolloClient({
-  link: scalarsLink.concat(httpLink).concat(errorLink),
+  link: scalarsLink.concat(errorLink).concat(authLink).concat(httpLink),
   cache: new InMemoryCache({}),
 });
 

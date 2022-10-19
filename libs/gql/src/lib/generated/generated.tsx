@@ -17,10 +17,21 @@ export type Scalars = {
   DateTime: import("luxon").DateTime;
 };
 
+export type DailyScoreEntity = {
+  __typename?: 'DailyScoreEntity';
+  date: Scalars['DateTime'];
+  id: Scalars['ID'];
+  ms?: Maybe<Scalars['Float']>;
+  user: UserEntity;
+  userFirebaseId: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createScore: ScoreEntity;
   deleteScore: Scalars['Boolean'];
+  startDaily?: Maybe<Scalars['String']>;
+  submitDaily: Scalars['Boolean'];
 };
 
 
@@ -33,12 +44,27 @@ export type MutationDeleteScoreArgs = {
   number: Scalars['Float'];
 };
 
+
+export type MutationSubmitDailyArgs = {
+  key: Scalars['String'];
+  milliseconds: Scalars['Int'];
+};
+
 export type Query = {
   __typename?: 'Query';
   allScores: Array<ScoreEntity>;
   allScoresPastDay: Array<ScoreEntity>;
   allScoresPastWeek: Array<ScoreEntity>;
   allScoresUniqueUser: Array<ScoreEntity>;
+  getDailyQuestions: Array<QuestionEntity>;
+  getDailyScores: Array<DailyScoreEntity>;
+};
+
+export type QuestionEntity = {
+  __typename?: 'QuestionEntity';
+  lhs: Scalars['Float'];
+  operator: Scalars['String'];
+  rhs: Scalars['Float'];
 };
 
 export type ScoreEntity = {
@@ -54,25 +80,17 @@ export type ScoreInput = {
   score: Scalars['Int'];
 };
 
-export type GetScoresQueryVariables = Exact<{ [key: string]: never; }>;
+export type UserEntity = {
+  __typename?: 'UserEntity';
+  dailyScore?: Maybe<DailyScoreEntity>;
+  firebaseId: Scalars['ID'];
+  username: Scalars['String'];
+};
+
+export type GetRegularScoresQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetScoresQuery = { __typename?: 'Query', allScores: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
-
-export type GetUniqueScoresQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetUniqueScoresQuery = { __typename?: 'Query', allScoresUniqueUser: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
-
-export type GetScoresPastWeekQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetScoresPastWeekQuery = { __typename?: 'Query', allScoresPastWeek: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
-
-export type GetScoresPastDayQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetScoresPastDayQuery = { __typename?: 'Query', allScoresPastDay: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
+export type GetRegularScoresQuery = { __typename?: 'Query', allScores: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }>, allScoresUniqueUser: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }>, allScoresPastWeek: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }>, allScoresPastDay: Array<{ __typename?: 'ScoreEntity', id: string, date: import("luxon").DateTime, name: string, score: number }> };
 
 export type PostScoreMutationVariables = Exact<{
   score: Scalars['Int'];
@@ -82,120 +100,50 @@ export type PostScoreMutationVariables = Exact<{
 
 export type PostScoreMutation = { __typename?: 'Mutation', createScore: { __typename?: 'ScoreEntity', date: import("luxon").DateTime, id: string, name: string, score: number } };
 
+export type GetDailyQuestionsQueryVariables = Exact<{ [key: string]: never; }>;
 
-export const GetScoresDocument = gql`
-    query GetScores {
+
+export type GetDailyQuestionsQuery = { __typename?: 'Query', getDailyQuestions: Array<{ __typename?: 'QuestionEntity', lhs: number, operator: string, rhs: number }> };
+
+export type StartDailyMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StartDailyMutation = { __typename?: 'Mutation', startDaily?: string | null };
+
+export type EndDailyMutationVariables = Exact<{
+  key: Scalars['String'];
+  duration: Scalars['Int'];
+}>;
+
+
+export type EndDailyMutation = { __typename?: 'Mutation', submitDaily: boolean };
+
+export type DailyChallengeResultsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DailyChallengeResultsQuery = { __typename?: 'Query', getDailyScores: Array<{ __typename?: 'DailyScoreEntity', ms?: number | null, date: import("luxon").DateTime, user: { __typename?: 'UserEntity', username: string } }> };
+
+
+export const GetRegularScoresDocument = gql`
+    query GetRegularScores {
   allScores {
     id
     date
     name
     score
   }
-}
-    `;
-
-/**
- * __useGetScoresQuery__
- *
- * To run a query within a React component, call `useGetScoresQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetScoresQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetScoresQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetScoresQuery(baseOptions?: Apollo.QueryHookOptions<GetScoresQuery, GetScoresQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetScoresQuery, GetScoresQueryVariables>(GetScoresDocument, options);
-      }
-export function useGetScoresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScoresQuery, GetScoresQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetScoresQuery, GetScoresQueryVariables>(GetScoresDocument, options);
-        }
-export type GetScoresQueryHookResult = ReturnType<typeof useGetScoresQuery>;
-export type GetScoresLazyQueryHookResult = ReturnType<typeof useGetScoresLazyQuery>;
-export type GetScoresQueryResult = Apollo.QueryResult<GetScoresQuery, GetScoresQueryVariables>;
-export const GetUniqueScoresDocument = gql`
-    query GetUniqueScores {
   allScoresUniqueUser {
     id
     date
     name
     score
   }
-}
-    `;
-
-/**
- * __useGetUniqueScoresQuery__
- *
- * To run a query within a React component, call `useGetUniqueScoresQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetUniqueScoresQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetUniqueScoresQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetUniqueScoresQuery(baseOptions?: Apollo.QueryHookOptions<GetUniqueScoresQuery, GetUniqueScoresQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetUniqueScoresQuery, GetUniqueScoresQueryVariables>(GetUniqueScoresDocument, options);
-      }
-export function useGetUniqueScoresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUniqueScoresQuery, GetUniqueScoresQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetUniqueScoresQuery, GetUniqueScoresQueryVariables>(GetUniqueScoresDocument, options);
-        }
-export type GetUniqueScoresQueryHookResult = ReturnType<typeof useGetUniqueScoresQuery>;
-export type GetUniqueScoresLazyQueryHookResult = ReturnType<typeof useGetUniqueScoresLazyQuery>;
-export type GetUniqueScoresQueryResult = Apollo.QueryResult<GetUniqueScoresQuery, GetUniqueScoresQueryVariables>;
-export const GetScoresPastWeekDocument = gql`
-    query GetScoresPastWeek {
   allScoresPastWeek {
     id
     date
     name
     score
   }
-}
-    `;
-
-/**
- * __useGetScoresPastWeekQuery__
- *
- * To run a query within a React component, call `useGetScoresPastWeekQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetScoresPastWeekQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetScoresPastWeekQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetScoresPastWeekQuery(baseOptions?: Apollo.QueryHookOptions<GetScoresPastWeekQuery, GetScoresPastWeekQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetScoresPastWeekQuery, GetScoresPastWeekQueryVariables>(GetScoresPastWeekDocument, options);
-      }
-export function useGetScoresPastWeekLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScoresPastWeekQuery, GetScoresPastWeekQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetScoresPastWeekQuery, GetScoresPastWeekQueryVariables>(GetScoresPastWeekDocument, options);
-        }
-export type GetScoresPastWeekQueryHookResult = ReturnType<typeof useGetScoresPastWeekQuery>;
-export type GetScoresPastWeekLazyQueryHookResult = ReturnType<typeof useGetScoresPastWeekLazyQuery>;
-export type GetScoresPastWeekQueryResult = Apollo.QueryResult<GetScoresPastWeekQuery, GetScoresPastWeekQueryVariables>;
-export const GetScoresPastDayDocument = gql`
-    query GetScoresPastDay {
   allScoresPastDay {
     id
     date
@@ -206,31 +154,31 @@ export const GetScoresPastDayDocument = gql`
     `;
 
 /**
- * __useGetScoresPastDayQuery__
+ * __useGetRegularScoresQuery__
  *
- * To run a query within a React component, call `useGetScoresPastDayQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetScoresPastDayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetRegularScoresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRegularScoresQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetScoresPastDayQuery({
+ * const { data, loading, error } = useGetRegularScoresQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetScoresPastDayQuery(baseOptions?: Apollo.QueryHookOptions<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>) {
+export function useGetRegularScoresQuery(baseOptions?: Apollo.QueryHookOptions<GetRegularScoresQuery, GetRegularScoresQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>(GetScoresPastDayDocument, options);
+        return Apollo.useQuery<GetRegularScoresQuery, GetRegularScoresQueryVariables>(GetRegularScoresDocument, options);
       }
-export function useGetScoresPastDayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>) {
+export function useGetRegularScoresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetRegularScoresQuery, GetRegularScoresQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>(GetScoresPastDayDocument, options);
+          return Apollo.useLazyQuery<GetRegularScoresQuery, GetRegularScoresQueryVariables>(GetRegularScoresDocument, options);
         }
-export type GetScoresPastDayQueryHookResult = ReturnType<typeof useGetScoresPastDayQuery>;
-export type GetScoresPastDayLazyQueryHookResult = ReturnType<typeof useGetScoresPastDayLazyQuery>;
-export type GetScoresPastDayQueryResult = Apollo.QueryResult<GetScoresPastDayQuery, GetScoresPastDayQueryVariables>;
+export type GetRegularScoresQueryHookResult = ReturnType<typeof useGetRegularScoresQuery>;
+export type GetRegularScoresLazyQueryHookResult = ReturnType<typeof useGetRegularScoresLazyQuery>;
+export type GetRegularScoresQueryResult = Apollo.QueryResult<GetRegularScoresQuery, GetRegularScoresQueryVariables>;
 export const PostScoreDocument = gql`
     mutation PostScore($score: Int!, $name: String!) {
   createScore(score: {name: $name, score: $score}) {
@@ -268,3 +216,139 @@ export function usePostScoreMutation(baseOptions?: Apollo.MutationHookOptions<Po
 export type PostScoreMutationHookResult = ReturnType<typeof usePostScoreMutation>;
 export type PostScoreMutationResult = Apollo.MutationResult<PostScoreMutation>;
 export type PostScoreMutationOptions = Apollo.BaseMutationOptions<PostScoreMutation, PostScoreMutationVariables>;
+export const GetDailyQuestionsDocument = gql`
+    query GetDailyQuestions {
+  getDailyQuestions {
+    lhs
+    operator
+    rhs
+  }
+}
+    `;
+
+/**
+ * __useGetDailyQuestionsQuery__
+ *
+ * To run a query within a React component, call `useGetDailyQuestionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDailyQuestionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDailyQuestionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetDailyQuestionsQuery(baseOptions?: Apollo.QueryHookOptions<GetDailyQuestionsQuery, GetDailyQuestionsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetDailyQuestionsQuery, GetDailyQuestionsQueryVariables>(GetDailyQuestionsDocument, options);
+      }
+export function useGetDailyQuestionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetDailyQuestionsQuery, GetDailyQuestionsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetDailyQuestionsQuery, GetDailyQuestionsQueryVariables>(GetDailyQuestionsDocument, options);
+        }
+export type GetDailyQuestionsQueryHookResult = ReturnType<typeof useGetDailyQuestionsQuery>;
+export type GetDailyQuestionsLazyQueryHookResult = ReturnType<typeof useGetDailyQuestionsLazyQuery>;
+export type GetDailyQuestionsQueryResult = Apollo.QueryResult<GetDailyQuestionsQuery, GetDailyQuestionsQueryVariables>;
+export const StartDailyDocument = gql`
+    mutation StartDaily {
+  startDaily
+}
+    `;
+export type StartDailyMutationFn = Apollo.MutationFunction<StartDailyMutation, StartDailyMutationVariables>;
+
+/**
+ * __useStartDailyMutation__
+ *
+ * To run a mutation, you first call `useStartDailyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStartDailyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [startDailyMutation, { data, loading, error }] = useStartDailyMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStartDailyMutation(baseOptions?: Apollo.MutationHookOptions<StartDailyMutation, StartDailyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<StartDailyMutation, StartDailyMutationVariables>(StartDailyDocument, options);
+      }
+export type StartDailyMutationHookResult = ReturnType<typeof useStartDailyMutation>;
+export type StartDailyMutationResult = Apollo.MutationResult<StartDailyMutation>;
+export type StartDailyMutationOptions = Apollo.BaseMutationOptions<StartDailyMutation, StartDailyMutationVariables>;
+export const EndDailyDocument = gql`
+    mutation EndDaily($key: String!, $duration: Int!) {
+  submitDaily(key: $key, milliseconds: $duration)
+}
+    `;
+export type EndDailyMutationFn = Apollo.MutationFunction<EndDailyMutation, EndDailyMutationVariables>;
+
+/**
+ * __useEndDailyMutation__
+ *
+ * To run a mutation, you first call `useEndDailyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEndDailyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [endDailyMutation, { data, loading, error }] = useEndDailyMutation({
+ *   variables: {
+ *      key: // value for 'key'
+ *      duration: // value for 'duration'
+ *   },
+ * });
+ */
+export function useEndDailyMutation(baseOptions?: Apollo.MutationHookOptions<EndDailyMutation, EndDailyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<EndDailyMutation, EndDailyMutationVariables>(EndDailyDocument, options);
+      }
+export type EndDailyMutationHookResult = ReturnType<typeof useEndDailyMutation>;
+export type EndDailyMutationResult = Apollo.MutationResult<EndDailyMutation>;
+export type EndDailyMutationOptions = Apollo.BaseMutationOptions<EndDailyMutation, EndDailyMutationVariables>;
+export const DailyChallengeResultsDocument = gql`
+    query DailyChallengeResults {
+  getDailyScores {
+    user {
+      username
+    }
+    ms
+    date
+  }
+}
+    `;
+
+/**
+ * __useDailyChallengeResultsQuery__
+ *
+ * To run a query within a React component, call `useDailyChallengeResultsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDailyChallengeResultsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDailyChallengeResultsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDailyChallengeResultsQuery(baseOptions?: Apollo.QueryHookOptions<DailyChallengeResultsQuery, DailyChallengeResultsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DailyChallengeResultsQuery, DailyChallengeResultsQueryVariables>(DailyChallengeResultsDocument, options);
+      }
+export function useDailyChallengeResultsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DailyChallengeResultsQuery, DailyChallengeResultsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DailyChallengeResultsQuery, DailyChallengeResultsQueryVariables>(DailyChallengeResultsDocument, options);
+        }
+export type DailyChallengeResultsQueryHookResult = ReturnType<typeof useDailyChallengeResultsQuery>;
+export type DailyChallengeResultsLazyQueryHookResult = ReturnType<typeof useDailyChallengeResultsLazyQuery>;
+export type DailyChallengeResultsQueryResult = Apollo.QueryResult<DailyChallengeResultsQuery, DailyChallengeResultsQueryVariables>;

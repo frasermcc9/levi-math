@@ -1,31 +1,22 @@
-query GetScores {
+query GetRegularScores {
   allScores {
     id
     date
     name
     score
   }
-}
-
-query GetUniqueScores {
   allScoresUniqueUser {
     id
     date
     name
     score
   }
-}
-
-query GetScoresPastWeek {
   allScoresPastWeek {
     id
     date
     name
     score
   }
-}
-
-query GetScoresPastDay {
   allScoresPastDay {
     id
     date
@@ -40,5 +31,31 @@ mutation PostScore($score: Int!, $name: String!) {
     id
     name
     score
+  }
+}
+
+query GetDailyQuestions {
+  getDailyQuestions {
+    lhs
+    operator
+    rhs
+  }
+}
+
+mutation StartDaily {
+  startDaily
+}
+
+mutation EndDaily($key: String!, $duration: Int!) {
+  submitDaily(key: $key, milliseconds: $duration)
+}
+
+query DailyChallengeResults {
+  getDailyScores {
+    user {
+      username
+    }
+    ms
+    date
   }
 }

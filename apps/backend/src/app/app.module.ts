@@ -8,10 +8,19 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { GraphQLMiddlewareModule } from './middleware/gql/gql-middleware.module';
+import { FirebaseModule } from '@levi-math/firebase';
+import { FirebaseGuard } from './middleware/auth/firebase.guard';
+import { FirebaseAuthStrategy } from './middleware/auth/firebase.strategy';
+import { DailyModule } from './resolvers/daily/daily.module';
+import { UserModule } from './resolvers/user/user.module';
+import { User, UserSchema } from './database/schema/user.schema';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
+    FirebaseModule.forRoot({
+      googleApplicationCredential: `${__dirname}/assets/service-account.json`,
+    }),
     MongooseModule.forRoot(process.env['MONGO_URI'] ?? ''),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -30,10 +39,13 @@ import { GraphQLMiddlewareModule } from './middleware/gql/gql-middleware.module'
       }),
     }),
     GraphQLMiddlewareModule,
-    ScoreModule,
     DatabaseModule,
+    ScoreModule,
+    DailyModule,
+    UserModule,
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
 
-  providers: [],
+  providers: [FirebaseGuard, FirebaseAuthStrategy],
 })
 export class AppModule {}

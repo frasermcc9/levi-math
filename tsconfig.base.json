@@ -26,6 +26,7 @@
     "paths": {
       "@levi-math/common": ["libs/common/src/index.ts"],
       "@levi-math/components": ["libs/components/src/index.ts"],
+      "@levi-math/firebase": ["libs/firebase/src/index.ts"],
       "@levi-math/gql": ["libs/gql/src/index.ts"]
     },
     "strictNullChecks": true,

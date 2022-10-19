@@ -13,9 +13,19 @@ export interface ScoreInput {
     score: number;
 }
 
+export interface DailyScoreEntity {
+    date: DateTime;
+    id: string;
+    ms?: Nullable<number>;
+    user: UserEntity;
+    userFirebaseId: string;
+}
+
 export interface IMutation {
     createScore(score: ScoreInput): ScoreEntity | Promise<ScoreEntity>;
     deleteScore(number: number): boolean | Promise<boolean>;
+    startDaily(): Nullable<string> | Promise<Nullable<string>>;
+    submitDaily(key: string, milliseconds: number): boolean | Promise<boolean>;
 }
 
 export interface IQuery {
@@ -23,6 +33,14 @@ export interface IQuery {
     allScoresPastDay(): ScoreEntity[] | Promise<ScoreEntity[]>;
     allScoresPastWeek(): ScoreEntity[] | Promise<ScoreEntity[]>;
     allScoresUniqueUser(): ScoreEntity[] | Promise<ScoreEntity[]>;
+    getDailyQuestions(): QuestionEntity[] | Promise<QuestionEntity[]>;
+    getDailyScores(): DailyScoreEntity[] | Promise<DailyScoreEntity[]>;
+}
+
+export interface QuestionEntity {
+    lhs: number;
+    operator: string;
+    rhs: number;
 }
 
 export interface ScoreEntity {
@@ -30,6 +48,12 @@ export interface ScoreEntity {
     id: string;
     name: string;
     score: number;
+}
+
+export interface UserEntity {
+    dailyScore?: Nullable<DailyScoreEntity>;
+    firebaseId: string;
+    username: string;
 }
 
 export type DateTime = any;

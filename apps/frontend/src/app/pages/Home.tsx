@@ -10,15 +10,25 @@ export const Home = () => {
     navigate('/game');
   };
 
+  const handleDailyChallenge = () => navigate('/daily-prepare');
+
   return (
     <main className="w-full">
       <Header />
-      <div className="flex justify-center">
-        <div className="max-w-lg rounded-2xl bg-gray-200 p-10">
-          <div className="flex flex-col gap-y-8">
-            <IntroHeader />
+      <div className="flex flex-col items-center justify-center">
+        <div>
+          <button
+            className="text-blue-500 underline"
+            onClick={handleDailyChallenge}
+          >
+            Daily Challenge
+          </button>
+          <div className="max-w-lg rounded-2xl bg-gray-200 p-10">
+            <div className="flex flex-col gap-y-8">
+              <IntroHeader />
 
-            <GameOptions onClick={handleStart} />
+              <GameOptions onClick={handleStart} />
+            </div>
           </div>
         </div>
       </div>
