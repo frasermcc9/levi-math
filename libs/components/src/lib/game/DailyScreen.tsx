@@ -69,12 +69,12 @@ export const DailyScreen = () => {
     }
 
     const interval = setInterval(() => {
-      secondsThrough = DateTime.now().diff(startTime).as('seconds');
-      setDuration(secondsThrough);
-
       if (questions.length && questions.length === score) {
         clearInterval(interval);
+        return;
       }
+      secondsThrough = DateTime.now().diff(startTime).as('seconds');
+      setDuration(secondsThrough);
     }, 1000);
 
     return () => clearInterval(interval);
