@@ -22,6 +22,11 @@ export class ScoreResolver {
     return this.scoreService.getTopScoresPastWeek(10);
   }
 
+  @Query(() => [ScoreEntity])
+  async allScoresPastDay(): Promise<ScoreEntity[]> {
+    return this.scoreService.getTopScoresPastDay(10);
+  }
+
   @Mutation(() => ScoreEntity)
   createScore(@Args('score') { name, score }: ScoreInput) {
     const newScore = { score, name: name.trim() };

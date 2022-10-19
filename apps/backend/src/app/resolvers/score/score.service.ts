@@ -84,6 +84,17 @@ export class ScoreService {
     return scores.map(this.toEntity);
   }
 
+  async getTopScoresPastDay(count: number): Promise<ScoreEntity[]> {
+    const scores = await this.scoreModel.find(
+      {
+        date: { $gte: DateTime.local().minus({ days: 1 }).toJSDate() },
+      },
+      {},
+      { limit: count, sort: { score: -1 } }
+    );
+    return scores.map(this.toEntity);
+  }
+
   deleteScore(number: number) {
     return this.scoreModel.deleteMany({ score: number });
   }
