@@ -120,10 +120,10 @@ export const GameScreen = ({ config }: GameScreenProps) => {
               <div className="flex-col text-center">
                 <div className="mb-4 text-3xl">Final Score: {score}</div>
                 {isEligibleForLeaderboard && !posted && (
-                  <div className="flex items-center gap-x-4">
+                  <div className="flex flex-col items-center gap-4 sm:flex-row">
                     <div className="">
                       <input
-                        className="rounded p-2"
+                        className="rounded p-2 text-center sm:text-left"
                         placeholder="name (required)"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
