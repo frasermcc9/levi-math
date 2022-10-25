@@ -4,9 +4,10 @@ import classNames from 'classnames';
 import { useMemo } from 'react';
 
 export const LeaderboardTabs = () => {
-  const { data: scoresData } = useGetRegularScoresQuery({
-    fetchPolicy: 'cache-and-network',
-  });
+  const { data: scoresData, loading: scoresAreLoading } =
+    useGetRegularScoresQuery({
+      fetchPolicy: 'cache-and-network',
+    });
 
   const bgColorMap = useMemo(
     () => [
@@ -79,6 +80,24 @@ export const LeaderboardTabs = () => {
                       </div>
                     </div>
                   ))}
+                  {scoresAreLoading && (
+                    <div className="divide-y divide-gray-400">
+                      {Array.from({ length: 2 }).map((_, index) => (
+                        <div
+                          key={index}
+                          className={classNames(
+                            'grid grid-cols-4 bg-gray-200 animate-pulse',
+                            { 'rounded-b-lg': index === 1 }
+                          )}
+                        >
+                          <div className={'p-4 font-semibold'}>{index + 1}</div>
+                          <div className={'p-4 font-semibold'}></div>
+                          <div className={'p-4 font-semibold'}></div>
+                          <div className={'p-4 font-semibold'}></div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </ul>
             </Tab.Panel>
